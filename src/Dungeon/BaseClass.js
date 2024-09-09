@@ -63,7 +63,13 @@ class BaseClass{
         }
     }
     eventHandler(emitEventData,onEventData){
-        console.log('eventHandler',emitEventData,onEventData);
+        const eventData = Object.assign(onEventData,emitEventData);
+        // console.log('eventHandler',eventData);
+        if(eventData.fn && this.game[eventData.fn]){
+            this.game[eventData.fn](...(eventData.args??[]))
+        }else{
+            console.error('UNKOWN fn',eventData.fn??'NULL');
+        }
     }
 }
 

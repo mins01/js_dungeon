@@ -18,6 +18,25 @@ class Game extends BaseClass{
         });
         // this.dungeons = this.childs;
     }
+
+    init(){
+        this.on('start',{fn:'echo'});
+        this.on('end',{fn:'echo'});
+    }
+
+
+    echo(msg){
+        console.log('game.echo',msg);
+        
+    }
+
+    start(){
+        this.emit('start',{args:['GAME.start()']});
+    }
+
+    end(){
+        this.emit('end',{args:['GAME.end()']});
+    }
     
 
 

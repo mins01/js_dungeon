@@ -11,6 +11,7 @@ game.dungeons.push()
 let dungeon = new Dungeon(game);
 // new Dungeon(game);
 let floor1 = new Floor(dungeon);
+floor1.setSize(2,2)
 // console.log('game',game);
 // console.log('dungeon',dungeon);
 // console.log(JSON.stringify(game,null,2));
@@ -18,11 +19,13 @@ let floor1 = new Floor(dungeon);
 tmp = JSON.stringify(game,null,2);
 let game2 = Game.fromObject(null,JSON.parse(tmp));
 // console.log('game2',game2);
-tmp = JSON.stringify(game2,null,2);
-console.log(tmp);
+// tmp = JSON.stringify(game2,null,2);
+// console.log(tmp);
 // console.log(floor1.game);
 
-
+game2.init();
+game2.start();
+game2.end();
 
 
 // let dungeon = new Dungeon();
