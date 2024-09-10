@@ -1,56 +1,70 @@
 class BaseClass{
+    static global = {idx:0}
     id=null;
     name=null;
-    parent = null;
+    type='void';
+    // parent = null;
+    // child = null;
+    childIdx = 0;
     childs = null;
     onEvents = null;
     constructor(parent=null){
+        // const global = Object.getPrototypeOf(this.constructor).global;
+        const global = BaseClass.global;
+
         Object.defineProperty(this, 'parent', {
-            value: this.childs,          // better than `undefined`
-            writable: true,    // important!
-            enumerable: false, // could be omitted
-            configurable: true // nice to have
+            value: parent,
+            writable: false,
+            enumerable: false,
+            configurable: false
         });
-        Object.defineProperty(this, 'game', {
-            value: parent?.game??this,          // better than `undefined`
-            writable: false,    // important!
-            enumerable: false, // could be omitted
-            configurable: true // nice to have
+        Object.defineProperty(this, 'root', {
+            value: parent?.root??this,
+            writable: false,
+            enumerable: false,
+            configurable: false
         });
-        this.parent = parent;
+        this.type = this.constructor.name;
+        console.log('---------------------',global);
+        
+        this.id = (global.idx);
+        this.name = `Undefined ${this.type} - ${global.idx}`;
+        global.idx++;
+        // this.parent = parent;
         this.onEvents = {}
-        this.childs = [];
+        this.childs = new Array();
 
         if(this.parent && this.parent.childs){ // 부모의 자식으로 자동 추가
             this.parent.childs.push(this)
+            if(this.parent.childIdx < 0) this.parent.childIdx = 0;
         }
-        // console.log(this.constructor);
-        
+        // console.log('cccccccccc',Object.getPrototypeOf(this.constructor).name,this.constructor.name);        
     }
-
-
     static fromObject(parent,obj,ChildClass){
+        let objChilds = obj.childs??null;
+        delete obj.childs; // .childs 는 이 밑에서 따로 자동 처리되므로 여기선 assign 에 추가 안되도록 삭제함.
+
         let instance = Object.assign(new this(parent),obj);
-        instance.childs = [];
-        if(ChildClass){
-            
-            obj.childs.forEach((child,k) => {
+
+        if(ChildClass && objChilds){
+            objChilds.forEach((child,k) => {
                 ChildClass.fromObject(instance,child)
             });
         }
         return instance;
     }
 
-    toJSON(){
-        let skipKeys = ['parent']
-        let obj = {}
-        for (const [k, v] of Object.entries(this)) {
-            // console.log(`${k}: ${v}`);
-            if(!skipKeys.includes(k)){
-                obj[k]=v; 
-            }
-        }
-        return obj;
+    get child(){
+        return this.childs[this.childIdx]??null;
+    }
+    set child(child){
+        let idx = this.childs.indexOf(child);
+        if(idx<0){ throw new Error('Wrong child'); }
+        this.childIdx = idx
+    }
+
+    toString(){
+        return `[${this.type}] ${this.name}`;
     }
 
     on(eventName,onEventData){
@@ -65,8 +79,8 @@ class BaseClass{
     eventHandler(emitEventData,onEventData){
         const eventData = Object.assign(onEventData,emitEventData);
         // console.log('eventHandler',eventData);
-        if(eventData.fn && this.game[eventData.fn]){
-            this.game[eventData.fn](...(eventData.args??[]))
+        if(eventData.fn && this.root[eventData.fn]){
+            this.root[eventData.fn](...(eventData.args??[]))
         }else{
             console.error('UNKOWN fn',eventData.fn??'NULL');
         }

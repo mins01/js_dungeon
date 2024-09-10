@@ -2,6 +2,7 @@ import Dungeon from "./Dungeon.js";
 import BaseClass from "./BaseClass.js";
 
 class Game extends BaseClass{
+    dungeonIdx = -1;
 
     static fromObject(parent,obj){
         return super.fromObject(parent,obj,Dungeon);
@@ -9,19 +10,39 @@ class Game extends BaseClass{
 
     constructor(parent=null){
         super(null)
-        this.name = 'Undefined Game'
         Object.defineProperty(this, 'dungeons', {
-            value: this.childs,          // better than `undefined`
-            writable: true,    // important!
-            enumerable: false, // could be omitted
-            configurable: true // nice to have
+            value: this.childs,
+            writable: true,
+            enumerable: false,
+            configurable: true
         });
+        this.dungeons = this.childs;
+        // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',this.dungeons);
+        // console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',this.childs);
+        this.dungeonIdx = -1;
         // this.dungeons = this.childs;
     }
+    get dungeonIdx(){
+        return this.childIdx;
+    }
+    set dungeonIdx(dungeonIdx){
+        this.childIdx = dungeonIdx;
+    }
+    get dungeon(){
+        return this.child;
+    }
+    set dungeon(dungeon){
+        return this.child = dungeon
+    }
+
 
     init(){
-        this.on('start',{fn:'echo'});
-        this.on('end',{fn:'echo'});
+        if(this.dungeonIdx<0){
+            this.dungeonIdx = this.dungeons.length-1
+            if(this.dungeonIdx>-1){
+                this.floorIdx = this.dungeon.floors.length-1
+            }
+        }
     }
 
 
@@ -36,6 +57,10 @@ class Game extends BaseClass{
 
     end(){
         this.emit('end',{args:['GAME.end()']});
+    }
+
+    drawMap(){
+
     }
     
 

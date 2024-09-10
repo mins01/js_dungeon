@@ -12,14 +12,13 @@ class Floor extends BaseClass{
 
     constructor(parent=null){
         super(parent)
-        this.name = 'Undefined Floor'
         this.w = 0;
         this.h = 0;
         Object.defineProperty(this, 'dungeon', {
-            value: this.parent,          // better than `undefined`
-            writable: true,    // important!
-            enumerable: false, // could be omitted
-            configurable: true // nice to have
+            value: this.parent,
+            writable: true,
+            enumerable: false,
+            configurable: false
         });
         delete this.childs;
 

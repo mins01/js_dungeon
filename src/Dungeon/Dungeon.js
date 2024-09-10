@@ -2,31 +2,42 @@ import Floor from "./Floor.js";
 import BaseClass from "./BaseClass.js";
 
 class Dungeon extends BaseClass{
-    floors = null;
-    game = null;
+    // floors = null;
+    // game = null;/
 
     static fromObject(parent,obj){
         return super.fromObject(parent,obj,Floor);
     }
 
+    get floorIdx(){
+        return this.childIdx;
+    }
+    set floorIdx(floorIdx){
+        this.childIdx = floorIdx;
+    }
+    get floor(){
+        return this.child;
+    }
+    set floor(floor){
+        return this.child = floor
+    }
+
     constructor(parent=null){
         super(parent)
-        this.name = 'Undefined Dungeon'
-
-        Object.defineProperty(this, 'game', {
-            value: this.parent,          // better than `undefined`
-            writable: true,    // important!
-            enumerable: false, // could be omitted
-            configurable: true // nice to have
-        });
         Object.defineProperty(this, 'floors', {
-            value: this.childs,          // better than `undefined`
-            writable: true,    // important!
-            enumerable: false, // could be omitted
-            configurable: true // nice to have
+            value: this.childs,
+            writable: true,
+            enumerable: false,
+            configurable: false
         });
     }
     
+
+    init(){
+        if(this.floorIdx < 0){
+            this.floorIdx = this.floors.length-1
+        }
+    }
 
 
 

@@ -8,24 +8,35 @@ let tmp;
 
 let game = new Game();
 game.dungeons.push()
-let dungeon = new Dungeon(game);
-// new Dungeon(game);
-let floor1 = new Floor(dungeon);
-floor1.setSize(2,2)
+let dungeon1 = new Dungeon(game);
+let dungeon2 = new Dungeon(game);
+let floor1 = new Floor(dungeon1);
+let floor2 = new Floor(dungeon1);
+// floor1.setSize(2,2)
 // console.log('game',game);
-// console.log('dungeon',dungeon);
+console.log('dungeon1',dungeon1);
+game.dungeon = dungeon1;
+// game.dungeon.floor = floor1;
+game.dungeon.floorIdx = 0;
 // console.log(JSON.stringify(game,null,2));
 // process.exit(1);
+console.log('#-----------------------------------------#');
+
 tmp = JSON.stringify(game,null,2);
 let game2 = Game.fromObject(null,JSON.parse(tmp));
-// console.log('game2',game2);
-// tmp = JSON.stringify(game2,null,2);
-// console.log(tmp);
+console.log('game2',game2);
+tmp = JSON.stringify(game2,null,2);
+console.log(tmp);
 // console.log(floor1.game);
 
-game2.init();
-game2.start();
-game2.end();
+// game2.init();
+// game2.childs = 'x';
+// console.log(game2.childs);
+console.log('현재 게임 이름: '+(game2??'ERROR'));
+console.log('현재 던전 이름: '+(game2?.dungeon??'ERROR'));
+console.log('현재 층 이름: '+(game2?.dungeon.floor??'ERROR'));
+// game2.start();
+// game2.end();
 
 
 // let dungeon = new Dungeon();
