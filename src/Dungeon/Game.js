@@ -10,12 +10,8 @@ class Game extends BaseClass{
 
     constructor(parent=null){
         super(null)
-        Object.defineProperty(this, 'dungeons', {
-            value: this.childs,
-            writable: true,
-            enumerable: false,
-            configurable: true
-        });
+        Object.defineProperty(this, 'dungeons', { value: this.childs, writable: true, enumerable: false, configurable: true });
+        
         this.dungeons = this.childs;
         // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',this.dungeons);
         // console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',this.childs);
@@ -46,21 +42,21 @@ class Game extends BaseClass{
     }
 
 
-    echo(msg){
-        console.log('game.echo',msg);
+    echo(args){
+        console.log('game.echo',...args);
         
     }
 
     start(){
-        this.emit('start',{args:['GAME.start()']});
+        this.emit('start');
     }
 
     end(){
         this.emit('end',{args:['GAME.end()']});
     }
 
-    drawMap(){
-
+    drawFloor(){
+        // console.log(this.dungeon.floor);
     }
     
 

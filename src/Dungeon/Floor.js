@@ -6,32 +6,43 @@ class Floor extends BaseClass{
     h = null;
 
     static fromObject(parent,obj){
-        // return super.fromObject(parent,obj,Dungeon);
-        return super.fromObject(parent,obj,null);
+        return super.fromObject(parent,obj,Cell);
     }
 
     constructor(parent=null){
         super(parent)
-        this.w = 0;
-        this.h = 0;
-        Object.defineProperty(this, 'dungeon', {
-            value: this.parent,
+        Object.defineProperty(this, 'cells', {
+            value: this.childs,
             writable: true,
             enumerable: false,
             configurable: false
         });
-        delete this.childs;
-
+        this.w = 0;
+        this.h = 0;
     }
+
+    get cellIdx(){
+        return this.childIdx;
+    }
+    set cellIdx(cellIdx){
+        this.childIdx = cellIdx;
+    }
+    get cell(){
+        return this.child;
+    }
+    set cell(cell){
+        return this.child = cell
+    }
+
     setSize(w,h){
         this.w = w;
         this.h = h;
-        this.cells = new Array(this.w * this.h);
+        this.cells.length = this.w * this.h;
         this.cells.fill(null)
         this.cells.forEach((cell,k)=>{
             this.cells[k] = Cell.fromType('void');
         })
-        // console.log(this.cells);
+        // console.log(this);
         
     }
 

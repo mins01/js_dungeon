@@ -25,7 +25,6 @@ class BaseClass{
             configurable: false
         });
         this.type = this.constructor.name;
-        console.log('---------------------',global);
         
         this.id = (global.idx);
         this.name = `Undefined ${this.type} - ${global.idx}`;
@@ -71,18 +70,19 @@ class BaseClass{
         // console.log('on',eventName,onEventData);
         this.onEvents[eventName] = onEventData;
     }
-    emit(eventName,emitEventData){
+    emit(eventName,emitEventDataArgs=null){
         if(this.onEvents[eventName]){
-            this.eventHandler(emitEventData,this.onEvents[eventName]);
+            const onEventData = this.onEvents[eventName];
+            const fn = onEventData.fn;
+            const args = emitEventDataArgs??onEventData.args;
+            this.eventHandler(fn,args);
         }
     }
-    eventHandler(emitEventData,onEventData){
-        const eventData = Object.assign(onEventData,emitEventData);
-        // console.log('eventHandler',eventData);
-        if(eventData.fn && this.root[eventData.fn]){
-            this.root[eventData.fn](...(eventData.args??[]))
+    eventHandler(fn,args){
+        if(fn && this.root[fn]){
+            this.root[fn](args)
         }else{
-            console.error('UNKOWN fn',eventData.fn??'NULL');
+            console.error('UNKOWN fn',fn??'NULL');
         }
     }
 }
