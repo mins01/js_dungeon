@@ -1,5 +1,6 @@
-class BaseClass{
-    static global = {idx:0}
+import GameConfig from "../GameConfig.js";
+
+class BaseArea{
     id=null;
     name=null;
     type='void';
@@ -10,25 +11,13 @@ class BaseClass{
     onEvents = null;
     constructor(parent=null){
         // const global = Object.getPrototypeOf(this.constructor).global;
-        const global = BaseClass.global;
-
-        Object.defineProperty(this, 'parent', {
-            value: parent,
-            writable: false,
-            enumerable: false,
-            configurable: false
-        });
-        Object.defineProperty(this, 'root', {
-            value: parent?.root??this,
-            writable: false,
-            enumerable: false,
-            configurable: false
-        });
+        Object.defineProperty(this, 'parent', { value: parent, writable: false, enumerable: false, configurable: false });
+        Object.defineProperty(this, 'root', { value: parent?.root??this, writable: false, enumerable: false, configurable: false });
         this.type = this.constructor.name;
         
-        this.id = (global.idx);
-        this.name = `Undefined ${this.type} - ${global.idx}`;
-        global.idx++;
+        this.id = (GameConfig.idx);
+        this.name = `Undefined ${this.type} - ${GameConfig.idx}`;
+        GameConfig.idx++;
         // this.parent = parent;
         this.onEvents = {}
         this.childs = new Array();
@@ -38,6 +27,9 @@ class BaseClass{
             if(this.parent.childIdx < 0) this.parent.childIdx = 0;
         }
         // console.log('cccccccccc',Object.getPrototypeOf(this.constructor).name,this.constructor.name);        
+
+        // this.on('in',{fn:'echo',args:[this.toString()+' 입장']})
+        // this.on('out',{fn:'echo',args:[this.toString()+' 입장']})
     }
     static fromObject(parent,obj,ChildClass){
         let objChilds = obj.childs??null;
@@ -62,6 +54,7 @@ class BaseClass{
         this.childIdx = idx
     }
 
+    
     toString(){
         return `[${this.type}] ${this.name}`;
     }
@@ -75,16 +68,26 @@ class BaseClass{
             const onEventData = this.onEvents[eventName];
             const fn = onEventData.fn;
             const args = emitEventDataArgs??onEventData.args;
-            this.eventHandler(fn,args);
+            this.eventHandler(fn,onEventData.args,emitEventDataArgs,);
         }
     }
-    eventHandler(fn,args){
+    eventHandler(fn,onEventDataArgs,emitEventDataArgs){
         if(fn && this.root[fn]){
-            this.root[fn](args)
+            this.root[fn](onEventDataArgs,emitEventDataArgs)
         }else{
             console.error('UNKOWN fn',fn??'NULL');
         }
     }
+
+
+    in(character){
+        this.emit('in',[character]);
+        this.root.echo([`${character.toString()}(이/가) ${this.toString()}(에/게) 입장`])
+    }
+    out(character){
+        this.emit('out'[character]);
+        this.root.echo([`${character.toString()}(이/가) ${this.toString()}(에/게)서 퇴장`])
+    }
 }
 
-export default BaseClass;
+export default BaseArea;
